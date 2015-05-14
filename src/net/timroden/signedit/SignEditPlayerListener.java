@@ -1,10 +1,12 @@
 package net.timroden.signedit;
 
 import java.util.logging.Level;
+
 import net.timroden.signedit.data.LogType;
 import net.timroden.signedit.data.SignEditDataPackage;
 import net.timroden.signedit.data.SignFunction;
 import net.timroden.signedit.utils.SignEditUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -15,6 +17,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignEditPlayerListener implements Listener {
+
 	private SignEdit plugin;
 	private SignEditUtils utils;
 
@@ -39,9 +42,7 @@ public class SignEditPlayerListener implements Listener {
 		}
 		Sign sign = (Sign) block.getState();
 		dataPack = (SignEditDataPackage) this.plugin.playerData.get(player.getName());
-
 		SignFunction function = dataPack.getFunction();
-
 		if (function.equals(SignFunction.COPY)) {
 			if (this.utils.shouldCancel(player)) {
 				event.setCancelled(true);
@@ -63,20 +64,16 @@ public class SignEditPlayerListener implements Listener {
 				event.setCancelled(true);
 			}
 			String[] lines = dataPack.getLines();
-
 			if (this.utils.throwSignChange(block, player, sign.getLines()).booleanValue()) {
 				player.sendMessage(this.plugin.chatPrefix + this.plugin.localization.get("pasteError"));
 				this.plugin.playerData.remove(player.getName());
 				return;
 			}
-
 			for (int i = 0; i < lines.length; i++) {
 				sign.setLine(i, lines[i]);
 			}
 			sign.update();
-
 			int amount = dataPack.getAmount();
-
 			amount--;
 			if (amount == 0) {
 				this.utils.throwSignChange(block, player, sign.getLines());
@@ -86,25 +83,17 @@ public class SignEditPlayerListener implements Listener {
 			}
 			SignEditDataPackage tmp = new SignEditDataPackage(player.getName(), lines, amount, SignFunction.PASTE);
 			this.plugin.playerData.put(player.getName(), tmp);
-			player.sendMessage(this.plugin.chatPrefix
-				+ this.plugin.localization.get("pasted")
-				+ " "
-				+ this.plugin.localization.get(
-					"pasteCopiesLeft",
-					new Object[] { Integer.valueOf(amount),
-						amount == 1 ? this.plugin.localization.get("pasteCopyStr") : this.plugin.localization.get("pasteCopiesStr") }));
+			player.sendMessage(this.plugin.chatPrefix + this.plugin.localization.get("pasted") + " " + this.plugin.localization.get("pasteCopiesLeft", new Object[] { Integer.valueOf(amount), amount == 1 ? this.plugin.localization.get("pasteCopyStr") : this.plugin.localization.get("pasteCopiesStr") }));
 		} else if (function.equals(SignFunction.PASTEPERSIST)) {
 			if (this.utils.shouldCancel(player)) {
 				event.setCancelled(true);
 			}
 			String[] lines = dataPack.getLines();
-
 			if (this.utils.throwSignChange(block, player, sign.getLines()).booleanValue()) {
 				player.sendMessage(this.plugin.chatPrefix + this.plugin.localization.get("pasteError"));
 				this.plugin.playerData.remove(player.getName());
 				return;
 			}
-
 			for (int i = 0; i < lines.length; i++) {
 				sign.setLine(i, lines[i]);
 			}
@@ -116,23 +105,16 @@ public class SignEditPlayerListener implements Listener {
 			}
 			int line = dataPack.getLineNum();
 			String originalLine = sign.getLine(line);
-
 			String[] existingLines = sign.getLines();
 			String newText = dataPack.getLine();
 			existingLines[line] = newText;
-
 			if (this.utils.throwSignChange(block, player, existingLines).booleanValue()) {
 				player.sendMessage(this.plugin.chatPrefix + this.plugin.localization.get("editError"));
 				this.plugin.playerData.remove(player.getName());
 				return;
 			}
-
 			sign.setLine(line, ChatColor.translateAlternateColorCodes('&', newText));
-
-			this.plugin.log.logAll(player.getName(),
-				": (" + sign.getLocation().getBlockX() + ", " + sign.getLocation().getBlockY() + ", " + sign.getLocation().getBlockZ() + ", "
-					+ player.getWorld().getName() + ") \"" + originalLine + "\" " + this.plugin.localization.get("logChangedTo") + " \"" + newText + "\"",
-				LogType.SIGNCHANGE, Level.INFO);
+			this.plugin.log.logAll(player.getName(), ": (" + sign.getLocation().getBlockX() + ", " + sign.getLocation().getBlockY() + ", " + sign.getLocation().getBlockZ() + ", " + player.getWorld().getName() + ") \"" + originalLine + "\" " + this.plugin.localization.get("logChangedTo") + " \"" + newText + "\"", LogType.SIGNCHANGE, Level.INFO);
 			sign.update();
 			player.sendMessage(this.plugin.chatPrefix + this.plugin.localization.get("editChanged"));
 			this.plugin.playerData.remove(player.getName());
@@ -145,7 +127,6 @@ public class SignEditPlayerListener implements Listener {
 			if ((this.plugin.config.useCOPPermission()) && (!e.getPlayer().hasPermission("signedit.colorsonplace"))) {
 				return;
 			}
-
 			String[] lines = e.getLines();
 			for (int i = 0; i < 4; i++) {
 				String line = lines[i];

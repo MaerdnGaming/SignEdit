@@ -1,6 +1,7 @@
 package net.timroden.signedit.data;
 
 public class SignEditDataPackage {
+
 	private String playerName;
 	private SignFunction function;
 	private String line;

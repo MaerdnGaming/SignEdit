@@ -4,6 +4,7 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.event.block.Action;
 
 public class Config {
+
 	private SignEdit plugin;
 	private static Configuration config;
 	private static boolean ignoreCreative;
@@ -24,7 +25,6 @@ public class Config {
 		config = plugin.getConfig().options().configuration();
 		config.options().copyDefaults(true);
 		plugin.saveConfig();
-
 		getOpts();
 	}
 
@@ -33,7 +33,6 @@ public class Config {
 		config = this.plugin.getConfig().options().configuration();
 		config.options().copyDefaults(true);
 		this.plugin.saveConfig();
-
 		getOpts();
 	}
 
@@ -47,10 +46,8 @@ public class Config {
 		colorsOnPlace = config.getBoolean("signedit.colorsonplace.enabled");
 		useCOPPerm = config.getBoolean("signedit.colorsonplace.usepermission");
 		locale = config.getString("signedit.locale");
-
 		metrics = config.getBoolean("signedit.metrics");
 		fireBlockBreakPlace = config.getBoolean("signedit.fireBlockBreakPlace");
-
 		if (invertMouse)
 			clickAction = Action.RIGHT_CLICK_BLOCK;
 		else
@@ -106,7 +103,6 @@ public class Config {
 	}
 
 	public String clickActionStr() {
-		return invertMouse ? this.plugin.localization.get("clickRight")
-				: this.plugin.localization.get("clickLeft");
+		return invertMouse ? this.plugin.localization.get("clickRight") : this.plugin.localization.get("clickLeft");
 	}
 }
